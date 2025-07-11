@@ -92,7 +92,7 @@
                 @click="goProject(pro)"
             >
                 <img
-                    :src="pro.icon || pakePlusIcon"
+                    :src="pro.icon || ppIcon"
                     class="appIcon"
                     alt="appIcon"
                 />
@@ -110,7 +110,7 @@
             <div class="project" @click="showBranchDialog">
                 <el-icon class="addIcon" :size="26"><Plus /></el-icon>
                 <img
-                    :src="pakePlusIcon"
+                    :src="ppIcon"
                     class="appIcon"
                     alt="appIcon"
                     style="opacity: 0"
@@ -148,13 +148,15 @@
                 <el-dropdown-menu class="updateMenu">
                     <el-dropdown-item
                         class="updateBtn"
-                        v-if="isTauri && store.isUpdate"
+                        v-if="
+                            isTauri && store.isUpdate && store.ppnotes.overall
+                        "
                         @click="sendUpdateEvent('update-now')"
                     >
                         {{ t('updateNow') }}
                     </el-dropdown-item>
                     <el-dropdown-item
-                        v-if="isTauri"
+                        v-else-if="isTauri && store.ppnotes.overall"
                         @click="sendUpdateEvent('update-check')"
                     >
                         {{ t('checkUpdate') }}
@@ -370,12 +372,11 @@ import {
     getBuildYmlFetch,
     oneMessage,
     upstreamUser,
-    ppRepo,
     isDev,
     syncAllBranch,
 } from '@/utils/common'
 import ppconfig from '@root/scripts/ppconfig.json'
-import pakePlusIcon from '@/assets/images/pakeplus.png'
+import ppIcon from '@/assets/images/pakeplus.png'
 import { useI18n } from 'vue-i18n'
 import { getCurrentWindow } from '@tauri-apps/api/window'
 import packageJson from '../../package.json'
@@ -1197,7 +1198,6 @@ onMounted(() => {
                 }
 
                 .appDesc {
-                    max-width: 124px;
                     display: -webkit-box;
                     font-size: 12px;
                     color: gray;
@@ -1259,6 +1259,10 @@ onMounted(() => {
 
     .isUpdate {
         color: #e83737;
+
+        &:hover {
+            color: #e83737;
+        }
     }
 }
 
